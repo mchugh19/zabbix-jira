@@ -1,3 +1,4 @@
+jira_filter = 'project = OPS AND status != closed AND labels = "Monitoring" AND text ~ "eventid:{0}"' # JQL search to uniquely identify opened tickets
 jira_server = 'https://jira.example.ru'
 jira_user = 'jira'
 jira_pass = 'pass'

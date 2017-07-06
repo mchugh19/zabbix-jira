@@ -263,7 +263,7 @@ def main():
 
     # Search for any existing non-closed ticket with matching eventid
     j = jira_login()
-    tickets = j.search_issues('project = OPS AND status != closed AND labels = "Monitoring" AND text ~ "eventid:{0}"'.format(event_id))
+    tickets = j.search_issues(config.jira_filter.format(event_id))
 
 
     # Take action on new problem
@@ -285,8 +285,11 @@ def main():
             elif isinstance(zbx_file_img, str):
                 add_attachment(j, issue_key, zbx_file_img)
                 os.remove(zbx_file_img)
-        if config.o365_webhook:
-            teams_response = msg_teams(issue_key, sys.argv[2], trigger_id, settings['zbx_itemid'], settings['zbx_priority'], host, zbx_graph=zbx_graph_url)
+        try:
+            if config.o365_webhook:
+                teams_response = msg_teams(issue_key, sys.argv[2], trigger_id, settings['zbx_itemid'], settings['zbx_priority'], host, zbx_graph=zbx_graph_url)
+        except AttributeError:
+            pass
 
     # Close open ticket
     if tickets and trigger_status == "OK":
